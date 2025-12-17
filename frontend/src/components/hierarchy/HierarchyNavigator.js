@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { projectsAPI, workPackagesAPI, activitiesAPI } from '../../services/api';
 import { formatHours, formatDate } from '../../utils/helpers';
+import AddProjectModal from '../common/AddProjectModal';
+import AddWorkPackageModal from '../common/AddWorkPackageModal';
+import AddActivityModal from '../common/AddActivityModal';
 
 const HierarchyNavigator = () => {
   const [projects, setProjects] = useState([]);
@@ -10,6 +13,11 @@ const HierarchyNavigator = () => {
   const [activities, setActivities] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAddProjectModal, setShowAddProjectModal] = useState(false);
+  const [showAddWorkPackageModal, setShowAddWorkPackageModal] = useState(false);
+  const [showAddActivityModal, setShowAddActivityModal] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [selectedWorkPackageId, setSelectedWorkPackageId] = useState(null);
 
   useEffect(() => {
     loadProjects();
@@ -71,6 +79,38 @@ const HierarchyNavigator = () => {
     setExpandedWorkPackages(newExpanded);
   };
 
+  const handleAddWorkPackage = (projectId) => {
+    setSelectedProjectId(projectId);
+    setShowAddWorkPackageModal(true);
+  };
+
+  const handleAddActivity = (workPackageId) => {
+    setSelectedWorkPackageId(workPackageId);
+    setShowAddActivityModal(true);
+  };
+
+  const handleProjectAdded = () => {
+    loadProjects();
+  };
+
+  const handleWorkPackageAdded = () => {
+    if (selectedProjectId) {
+      workPackagesAPI.getByProject(selectedProjectId).then(response => {
+        setWorkPackages(prev => ({ ...prev, [selectedProjectId]: response.data.data }));
+      });
+    }
+    setSelectedProjectId(null);
+  };
+
+  const handleActivityAdded = () => {
+    if (selectedWorkPackageId) {
+      activitiesAPI.getByWorkPackage(selectedWorkPackageId).then(response => {
+        setActivities(prev => ({ ...prev, [selectedWorkPackageId]: response.data.data }));
+      });
+    }
+    setSelectedWorkPackageId(null);
+  };
+
   if (loading) return <div className="loading">Loading hierarchy...</div>;
   if (error) return <div className="error">{error}</div>;
 
@@ -79,6 +119,9 @@ const HierarchyNavigator = () => {
       <div className="header">
         <h2>Project Hierarchy Navigator</h2>
         <div className="controls">
+          <button onClick={() => setShowAddProjectModal(true)} className="btn-add">
+            ➕ Add Project
+          </button>
           <button onClick={() => setExpandedProjects(new Set())}>Collapse All</button>
           <button onClick={() => {
             const allIds = new Set(projects.map(p => p.id));
@@ -97,31 +140,55 @@ const HierarchyNavigator = () => {
       <div className="hierarchy-tree">
         {projects.map(project => (
           <div key={project.id} className="project-node">
-            <div className="node-header project" onClick={() => toggleProject(project.id)}>
-              <span className="toggle-icon">
-                {expandedProjects.has(project.id) ? '▼' : '▶'}
-              </span>
-              <span className="node-icon">📁</span>
-              <span className="node-name">{project.name}</span>
-              <span className="node-dates">
-                {formatDate(project.start_date)} - {formatDate(project.end_date)}
-              </span>
+            <div className="node-header project">
+              <div className="node-info" onClick={() => toggleProject(project.id)}>
+                <span className="toggle-icon">
+                  {expandedProjects.has(project.id) ? '▼' : '▶'}
+                </span>
+                <span className="node-icon">📁</span>
+                <span className="node-name">{project.name}</span>
+                <span className="node-dates">
+                  {formatDate(project.start_date)} - {formatDate(project.end_date)}
+                </span>
+              </div>
+              <button 
+                className="btn-add-small" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddWorkPackage(project.id);
+                }}
+                title="Add Work Package"
+              >
+                ➕ WP
+              </button>
             </div>
 
             {expandedProjects.has(project.id) && workPackages[project.id] && (
               <div className="children work-packages">
                 {workPackages[project.id].map(wp => (
                   <div key={wp.id} className="work-package-node">
-                    <div className="node-header work-package" onClick={() => toggleWorkPackage(wp.id)}>
-                      <span className="toggle-icon">
-                        {expandedWorkPackages.has(wp.id) ? '▼' : '▶'}
-                      </span>
-                      <span className="node-icon">📦</span>
-                      <span className="node-name">{wp.name}</span>
-                      <span className="rams-tag">{wp.rams_tag}</span>
-                      <span className="standard-effort">
-                        Standard: {formatHours(wp.standard_effort_hours)}h
-                      </span>
+                    <div className="node-header work-package">
+                      <div className="node-info" onClick={() => toggleWorkPackage(wp.id)}>
+                        <span className="toggle-icon">
+                          {expandedWorkPackages.has(wp.id) ? '▼' : '▶'}
+                        </span>
+                        <span className="node-icon">📦</span>
+                        <span className="node-name">{wp.name}</span>
+                        <span className="rams-tag">{wp.rams_tag}</span>
+                        <span className="standard-effort">
+                          Standard: {formatHours(wp.standard_effort_hours)}h
+                        </span>
+                      </div>
+                      <button 
+                        className="btn-add-small" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAddActivity(wp.id);
+                        }}
+                        title="Add Activity"
+                      >
+                        ➕ Activity
+                      </button>
                     </div>
 
                     {expandedWorkPackages.has(wp.id) && activities[wp.id] && (
@@ -168,6 +235,32 @@ const HierarchyNavigator = () => {
           </div>
         </div>
       </div>
+
+      <AddProjectModal
+        isOpen={showAddProjectModal}
+        onClose={() => setShowAddProjectModal(false)}
+        onProjectAdded={handleProjectAdded}
+      />
+
+      <AddWorkPackageModal
+        isOpen={showAddWorkPackageModal}
+        onClose={() => {
+          setShowAddWorkPackageModal(false);
+          setSelectedProjectId(null);
+        }}
+        onWorkPackageAdded={handleWorkPackageAdded}
+        preselectedProjectId={selectedProjectId}
+      />
+
+      <AddActivityModal
+        isOpen={showAddActivityModal}
+        onClose={() => {
+          setShowAddActivityModal(false);
+          setSelectedWorkPackageId(null);
+        }}
+        onActivityAdded={handleActivityAdded}
+        preselectedWorkPackageId={selectedWorkPackageId}
+      />
     </div>
   );
 };

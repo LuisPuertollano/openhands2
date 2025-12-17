@@ -465,3 +465,78 @@ tr.over-capacity {
     padding: 0.5rem;
   }
 }
+
+/* Add Item Buttons */
+.btn-add {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+  color: white !important;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.btn-add-small {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.btn-add-small:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.4);
+}
+
+/* Updated Node Header Structure */
+.node-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.node-header .node-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  cursor: pointer;
+}
+
+.node-header.project,
+.node-header.work-package {
+  padding: 0.75rem;
+}
+
+.node-header.project:hover .node-info,
+.node-header.work-package:hover .node-info {
+  background-color: rgba(102, 126, 234, 0.05);
+  border-radius: 8px;
+  margin: -0.5rem;
+  padding: 0.5rem;
+}
+
+/* Override specificity for activity nodes */
+.activity-node .node-header {
+  cursor: default;
+}
+
+.activity-node .node-header:hover {
+  background-color: rgba(102, 126, 234, 0.05);
+}

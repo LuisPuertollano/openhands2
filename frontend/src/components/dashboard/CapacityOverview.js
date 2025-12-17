@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 import { resourcesAPI, reportsAPI } from '../../services/api';
 import { getCapacityColor, getCurrentYearMonth, downloadFile } from '../../utils/helpers';
+import AddResourceModal from '../common/AddResourceModal';
 
 const CapacityOverview = () => {
   const [capacityData, setCapacityData] = useState([]);
@@ -11,6 +12,7 @@ const CapacityOverview = () => {
   const { year, month } = getCurrentYearMonth();
   const [selectedYear, setSelectedYear] = useState(year);
   const [selectedMonth, setSelectedMonth] = useState(month);
+  const [showAddResourceModal, setShowAddResourceModal] = useState(false);
 
   useEffect(() => {
     loadCapacityData();
@@ -66,6 +68,9 @@ const CapacityOverview = () => {
       <div className="header">
         <h2>Resource Capacity Overview</h2>
         <div className="controls">
+          <button onClick={() => setShowAddResourceModal(true)} className="btn-add">
+            ➕ Add Resource
+          </button>
           <select value={selectedYear} onChange={e => setSelectedYear(parseInt(e.target.value))}>
             {[2023, 2024, 2025].map(y => (
               <option key={y} value={y}>{y}</option>
@@ -153,6 +158,12 @@ const CapacityOverview = () => {
           </tbody>
         </table>
       </div>
+
+      <AddResourceModal
+        isOpen={showAddResourceModal}
+        onClose={() => setShowAddResourceModal(false)}
+        onResourceAdded={loadCapacityData}
+      />
     </div>
   );
 };
