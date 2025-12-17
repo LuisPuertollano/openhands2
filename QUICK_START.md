@@ -2,33 +2,80 @@
 
 ## Prerequisites
 
-- Node.js 16+ ([Download](https://nodejs.org/))
-- PostgreSQL 14+ ([Download](https://www.postgresql.org/download/))
-- npm (comes with Node.js)
+**Only Docker is required!** No need to install Node.js or PostgreSQL.
 
-## Option 1: Automated Setup (Recommended)
+- Docker Desktop ([Download](https://www.docker.com/products/docker-desktop))
+  - Mac: https://docs.docker.com/desktop/install/mac-install/
+  - Windows: https://docs.docker.com/desktop/install/windows-install/
+  - Linux: https://docs.docker.com/engine/install/
+
+## Option 1: One-Command Start (Recommended) 🚀
+
+This is the easiest way! Everything runs in Docker containers with automatic setup.
 
 ### Linux/Mac
 
 ```bash
-./setup.sh
+./start.sh
 ```
+
+This single script will:
+- ✅ Check if Docker is installed and running
+- ✅ Build all containers (PostgreSQL, Backend, Frontend)
+- ✅ Initialize the database automatically
+- ✅ Seed with mock data (15 resources, 3 projects)
+- ✅ Start all services
+- ✅ Open the application in your browser
 
 ### Windows
 
-```bash
-# Install backend dependencies
-cd backend
-npm install
-npm run db:setup
-npm run db:seed
-
-# Install frontend dependencies
-cd ../frontend
-npm install
+```batch
+start.bat
 ```
 
-## Option 2: Manual Setup
+Double-click `start.bat` or run it from Command Prompt.
+
+**That's it!** The application will be available at http://localhost:3001
+
+## Option 2: Manual Docker Setup
+
+If you prefer to run Docker commands manually:
+
+```bash
+# Build and start all containers
+docker compose up --build
+
+# Or run in background (detached mode)
+docker compose up --build -d
+
+# View logs
+docker compose logs -f
+
+# Stop everything
+docker compose down
+
+# Clean reset (removes database data)
+docker compose down -v
+```
+
+**What happens automatically:**
+- PostgreSQL container starts and initializes
+- Backend waits for PostgreSQL to be ready
+- Backend automatically creates database schema
+- Backend seeds mock data (15 resources, 3 projects, 15 WPs)
+- Backend API starts on port 3000
+- Frontend starts on port 3001
+
+Access the app at: http://localhost:3001
+
+## Option 3: Traditional Setup (For Developers)
+
+**⚠️ Only if you want to develop without Docker**
+
+### Prerequisites for this option:
+- Node.js 16+ ([Download](https://nodejs.org/))
+- PostgreSQL 14+ ([Download](https://www.postgresql.org/download/))
+- npm (comes with Node.js)
 
 ### Step 1: Backend Setup
 
@@ -36,8 +83,9 @@ npm install
 cd backend
 npm install
 
-# Configure database (edit if needed)
+# Configure database
 cp .env.example .env
+# Edit .env with your PostgreSQL credentials
 
 # Initialize database
 npm run db:setup
@@ -52,53 +100,36 @@ npm run db:seed
 cd frontend
 npm install
 
-# Configure API endpoint (edit if needed)
+# Configure API endpoint
 cp .env.example .env
 ```
 
-## Running the Application
+### Step 3: Run
 
-### Terminal 1 - Backend API
-
+**Terminal 1 - Backend:**
 ```bash
 cd backend
 npm start
 ```
 
-Server will start on: http://localhost:3000
-
-### Terminal 2 - Frontend React App
-
+**Terminal 2 - Frontend:**
 ```bash
 cd frontend
 npm start
 ```
 
-App will open automatically at: http://localhost:3001
-
-## Option 3: Docker Setup
-
-### Requirements
-- Docker
-- Docker Compose
-
-### Run
-
-```bash
-docker-compose up
-```
-
-This will start:
-- PostgreSQL on port 5432
-- Backend API on port 3000
-- Frontend on port 3001
-
-Access the app at: http://localhost:3001
+Access at: http://localhost:3001
 
 ## Testing the System
 
 ### 1. Run Capacity Validation Test
 
+**Using Docker:**
+```bash
+docker compose exec backend npm run test:capacity
+```
+
+**Without Docker:**
 ```bash
 cd backend
 npm run test:capacity
@@ -164,7 +195,65 @@ The seeded database includes:
 
 ## Common Issues
 
-### Database Connection Failed
+### Docker Issues
+
+#### Docker Not Running
+
+**Problem**: "Cannot connect to Docker daemon"
+
+**Solution**:
+1. Start Docker Desktop
+2. Wait for Docker to fully start (check system tray/menu bar)
+3. Run `docker info` to verify
+
+#### Containers Won't Start
+
+**Problem**: Containers fail to build or start
+
+**Solution**:
+```bash
+# Clean rebuild
+docker compose down -v
+docker compose build --no-cache
+docker compose up
+```
+
+#### Port Already in Use
+
+**Problem**: Port 3000, 3001, or 5432 already in use
+
+**Solution**:
+```bash
+# Stop existing containers
+docker compose down
+
+# Or find and stop conflicting process
+# Linux/Mac
+lsof -ti:3000 | xargs kill -9
+
+# Windows
+netstat -ano | findstr :3000
+taskkill /PID <PID> /F
+```
+
+#### Database Not Initializing
+
+**Problem**: Backend can't connect to database
+
+**Solution**:
+```bash
+# Check logs
+docker compose logs postgres
+docker compose logs backend
+
+# Reset database
+docker compose down -v
+docker compose up --build
+```
+
+### Traditional Setup Issues (Non-Docker)
+
+#### Database Connection Failed
 
 **Problem**: Cannot connect to PostgreSQL
 
@@ -173,19 +262,7 @@ The seeded database includes:
 2. Check credentials in `backend/.env`
 3. Verify database exists: `psql -U postgres -l`
 
-### Port Already in Use
-
-**Problem**: Port 3000 or 3001 already in use
-
-**Solution**:
-1. Change port in `.env` files
-2. Or stop the conflicting process:
-   ```bash
-   # Linux/Mac
-   lsof -ti:3000 | xargs kill -9
-   ```
-
-### NPM Install Fails
+#### NPM Install Fails
 
 **Problem**: Dependencies won't install
 
@@ -193,15 +270,6 @@ The seeded database includes:
 1. Clear npm cache: `npm cache clean --force`
 2. Delete `node_modules` and try again
 3. Update npm: `npm install -g npm@latest`
-
-### Frontend Can't Reach API
-
-**Problem**: API calls fail from frontend
-
-**Solution**:
-1. Verify backend is running on port 3000
-2. Check `REACT_APP_API_URL` in `frontend/.env`
-3. Ensure no CORS issues (backend has CORS enabled)
 
 ## Next Steps
 

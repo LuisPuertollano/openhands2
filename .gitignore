@@ -9,6 +9,8 @@ yarn.lock
 .env.development.local
 .env.test.local
 .env.production.local
+backend/.env
+frontend/.env
 
 # Build outputs
 build/
@@ -36,3 +38,6 @@ coverage/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Docker volumes
+postgres_data/

@@ -95,62 +95,69 @@ rams-workload-management/
 
 ### Prerequisites
 
-- Node.js 16+
-- PostgreSQL 14+
-- npm or yarn
+**Only Docker is required!** No need to install Node.js or PostgreSQL.
 
-### Installation
+- Docker Desktop ([Download](https://www.docker.com/products/docker-desktop))
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd rams-workload-management
-   ```
+### Quick Start (Recommended)
 
-2. **Setup Backend**
+**Linux/Mac:**
+```bash
+./start.sh
+```
+
+**Windows:**
+```batch
+start.bat
+```
+
+That's it! The script will:
+- ✅ Build all containers (PostgreSQL, Backend, Frontend)
+- ✅ Initialize database automatically
+- ✅ Seed with mock data (15 resources, 3 projects)
+- ✅ Start all services
+- ✅ Open http://localhost:3001 in your browser
+
+### Alternative: Manual Docker Commands
+
+```bash
+# Start everything
+docker compose up --build
+
+# Run in background
+docker compose up -d
+
+# Stop everything
+docker compose down
+
+# Clean reset (removes all data)
+docker compose down -v
+```
+
+### Traditional Setup (For Developers)
+
+If you prefer to work without Docker:
+
+**Prerequisites:** Node.js 16+, PostgreSQL 14+
+
+1. **Backend:**
    ```bash
    cd backend
    npm install
-   
-   # Configure database credentials
    cp .env.example .env
-   # Edit .env with your PostgreSQL credentials
-   
-   # Initialize database and schema
    npm run db:setup
-   
-   # Seed with mock data (15 resources, 3 projects, 5 WPs each)
    npm run db:seed
-   ```
-
-3. **Setup Frontend**
-   ```bash
-   cd ../frontend
-   npm install
-   
-   # Configure API endpoint
-   cp .env.example .env
-   # Default: REACT_APP_API_URL=http://localhost:3000/api
-   ```
-
-### Running the Application
-
-1. **Start Backend Server**
-   ```bash
-   cd backend
    npm start
-   # Server runs on http://localhost:3000
    ```
 
-2. **Start Frontend Development Server**
+2. **Frontend:**
    ```bash
    cd frontend
+   npm install
    npm start
-   # React app runs on http://localhost:3001
    ```
 
-3. **Access the Application**
-   Open browser to: http://localhost:3001
+3. **Access:** http://localhost:3001
 
 ## 📊 Core Business Logic
 
@@ -341,8 +348,37 @@ The seeding script creates realistic test data:
 
 ## 🛠️ Development
 
+### Docker Commands
+
+```bash
+# View logs
+docker compose logs -f
+
+# View specific service logs
+docker compose logs -f backend
+docker compose logs -f postgres
+
+# Execute commands in containers
+docker compose exec backend npm run test:capacity
+docker compose exec postgres psql -U postgres -d rams_workload
+
+# Restart a service
+docker compose restart backend
+
+# Rebuild after code changes
+docker compose up --build
+```
+
 ### Database Migrations
 
+**Using Docker:**
+```bash
+# Reset database
+docker compose down -v
+docker compose up --build
+```
+
+**Without Docker:**
 ```bash
 # Drop and recreate database
 npm run db:setup
@@ -362,6 +398,11 @@ curl http://localhost:3000/api/resources
 
 # Get capacity data
 curl "http://localhost:3000/api/resources/capacity?year=2024&month=1"
+
+# Run capacity validation test
+docker compose exec backend npm run test:capacity  # Docker
+# OR
+cd backend && npm run test:capacity  # Traditional
 ```
 
 ## 📝 Environment Variables

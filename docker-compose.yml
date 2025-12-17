@@ -7,16 +7,18 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: rams_workload
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+    networks:
+      - rams-network
 
   backend:
     build: ./backend
@@ -33,9 +35,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    volumes:
-      - ./backend:/app
-      - /app/node_modules
+    networks:
+      - rams-network
+    restart: on-failure
 
   frontend:
     build: ./frontend
@@ -43,13 +45,19 @@ services:
     environment:
       REACT_APP_API_URL: http://localhost:3000/api
       PORT: 3001
+      WATCHPACK_POLLING: "true"
     ports:
       - "3001:3001"
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+    networks:
+      - rams-network
+    stdin_open: true
+    tty: true
 
 volumes:
   postgres_data:
+
+networks:
+  rams-network:
+    driver: bridge

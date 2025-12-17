@@ -353,17 +353,48 @@ Example:
 
 ## 🚀 Getting Started
 
-### Quick Setup
+### Quick Setup (No Prerequisites Needed!)
 
+**Only Docker is required** - No need to install Node.js or PostgreSQL!
+
+**Linux/Mac:**
 ```bash
-# Automated setup
-./setup.sh
-
-# Or use Docker
-docker-compose up
+./start.sh
 ```
 
-### Manual Setup
+**Windows:**
+```batch
+start.bat
+```
+
+The script automatically:
+- ✅ Builds all containers
+- ✅ Initializes PostgreSQL database
+- ✅ Creates schema and seeds mock data
+- ✅ Starts all services
+- ✅ Opens browser to http://localhost:3001
+
+### Manual Docker Setup
+
+```bash
+# Start everything
+docker compose up --build
+
+# Or run in detached mode
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop everything
+docker compose down
+```
+
+### Traditional Setup (Optional - For Developers)
+
+If you prefer to work without Docker:
+
+**Prerequisites:** Node.js 16+, PostgreSQL 14+
 
 ```bash
 # Backend
@@ -373,7 +404,7 @@ npm run db:setup
 npm run db:seed
 npm start
 
-# Frontend
+# Frontend (new terminal)
 cd frontend
 npm install
 npm start
