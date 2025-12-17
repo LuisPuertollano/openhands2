@@ -2,6 +2,28 @@
 
 A comprehensive full-stack workload management tool designed for RAMS (Reliability, Availability, Maintainability, and Safety) Engineering teams in the railway industry.
 
+## 🚀 One-Click Installation
+
+### Windows Docker Desktop - Copy & Paste This:
+
+```powershell
+git clone https://github.com/LuisPuertollano/openhands2.git; cd openhands2; docker compose up -d --build
+```
+
+### Linux/Mac - Copy & Paste This:
+
+```bash
+git clone https://github.com/LuisPuertollano/openhands2.git && cd openhands2 && docker compose up -d --build
+```
+
+**Then open:** http://localhost:3001
+
+✅ **Database is persistent** - your data survives container restarts!  
+📖 **Windows Guide:** [WINDOWS_DOCKER_DESKTOP.md](WINDOWS_DOCKER_DESKTOP.md)  
+📘 **Full Install Guide:** [INSTALL.md](INSTALL.md)
+
+---
+
 ## 🎯 Overview
 
 This system helps engineering teams manage and track resource allocation across safety-critical projects, ensuring optimal capacity utilization and compliance with RAMS standards.
