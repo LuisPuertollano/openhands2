@@ -19,8 +19,10 @@ git clone https://github.com/LuisPuertollano/openhands2.git && cd openhands2 && 
 **Then open:** http://localhost:3001
 
 ✅ **Database is persistent** - your data survives container restarts!  
+✅ **Automatic port conflict detection** - installer will prompt for alternative ports if 3000/3001 are in use!  
 📖 **Windows Guide:** [WINDOWS_DOCKER_DESKTOP.md](WINDOWS_DOCKER_DESKTOP.md)  
-📘 **Full Install Guide:** [INSTALL.md](INSTALL.md)
+📘 **Full Install Guide:** [INSTALL.md](INSTALL.md)  
+🔌 **Port Configuration:** [PORT_CONFIGURATION.md](PORT_CONFIGURATION.md)
 
 ---
 
