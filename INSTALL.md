@@ -8,7 +8,7 @@
 git clone https://github.com/LuisPuertollano/openhands2.git; cd openhands2; docker compose up -d --build
 ```
 
-**Then open:** http://localhost:3001
+**Then open:** http://localhost:45679
 
 ✅ Database is **persistent** (your data survives restarts!)
 
@@ -22,7 +22,7 @@ git clone https://github.com/LuisPuertollano/openhands2.git; cd openhands2; dock
 git clone https://github.com/LuisPuertollano/openhands2.git && cd openhands2 && docker compose up -d --build
 ```
 
-**Then open:** http://localhost:3001
+**Then open:** http://localhost:45679
 
 ✅ Database is **persistent** (your data survives restarts!)
 

@@ -71,10 +71,10 @@ if [ -f .env ]; then
     echo ""
 fi
 
-# Set default ports
+# Set default ports (using high port numbers to avoid conflicts)
 POSTGRES_PORT=${POSTGRES_PORT:-5432}
-BACKEND_PORT=${BACKEND_PORT:-3000}
-FRONTEND_PORT=${FRONTEND_PORT:-3001}
+BACKEND_PORT=${BACKEND_PORT:-45678}
+FRONTEND_PORT=${FRONTEND_PORT:-45679}
 
 # Check for port conflicts
 echo "🔍 Checking for port conflicts..."
@@ -124,16 +124,16 @@ if [ "$PORT_CONFLICTS" = true ]; then
     
     case $choice in
         1)
-            echo "Please enter new port numbers (press Enter to keep default):"
+            echo "Please enter new port numbers (press Enter to keep current):"
             echo ""
             
-            read -p "PostgreSQL port [current: $POSTGRES_PORT, default: 5432]: " new_postgres
+            read -p "PostgreSQL port [current: $POSTGRES_PORT]: " new_postgres
             POSTGRES_PORT=${new_postgres:-$POSTGRES_PORT}
             
-            read -p "Backend API port [current: $BACKEND_PORT, default: 3000]: " new_backend
+            read -p "Backend API port [current: $BACKEND_PORT]: " new_backend
             BACKEND_PORT=${new_backend:-$BACKEND_PORT}
             
-            read -p "Frontend port [current: $FRONTEND_PORT, default: 3001]: " new_frontend
+            read -p "Frontend port [current: $FRONTEND_PORT]: " new_frontend
             FRONTEND_PORT=${new_frontend:-$FRONTEND_PORT}
             
             # Create/update .env file

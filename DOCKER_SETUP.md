@@ -69,7 +69,7 @@ That's it! Just install Docker and you're ready to go.
 4. **Wait for Initialization**
    - First run takes 2-3 minutes (downloading images, building containers)
    - Subsequent runs take ~30 seconds
-   - The script will automatically open http://localhost:3001 when ready
+   - The script will automatically open http://localhost:45679 when ready
 
 ### What Happens Behind the Scenes
 
@@ -91,14 +91,14 @@ That's it! Just install Docker and you're ready to go.
    - Checks if rams_workload database exists
    - If not: creates database schema
    - If not: seeds with 15 resources, 3 projects, 15 work packages
-   - Starts Express API server on port 3000
+   - Starts Express API server on port 45678
    
 5. Starting Frontend 🎨
-   - Starts React development server on port 3001
-   - Connects to backend API at http://localhost:3000
+   - Starts React development server on port 45679
+   - Connects to backend API at http://localhost:45678
    
 6. Opening Browser 🌐
-   - Automatically opens http://localhost:3001
+   - Automatically opens http://localhost:45679
 ```
 
 ## Common Commands
@@ -145,7 +145,7 @@ docker compose exec backend npm run test:capacity
 docker compose exec postgres psql -U postgres -d rams_workload
 
 # Check backend API
-docker compose exec backend curl http://localhost:3000/api/health
+docker compose exec backend curl http://localhost:45678/api/health
 ```
 
 ### Restarting Services
@@ -257,7 +257,7 @@ docker compose logs backend
 │  │                                            │ │
 │  │  ┌──────────────┐  ┌──────────────────┐  │ │
 │  │  │  PostgreSQL  │  │     Backend      │  │ │
-│  │  │   (port 5432)│  │   (port 3000)    │  │ │
+│  │  │   (port 5432)│  │   (port 45678)    │  │ │
 │  │  │              │◄─┤  - Express API   │  │ │
 │  │  │  - Database  │  │  - Auto-init DB  │  │ │
 │  │  │  - Volumes   │  │  - CRUD routes   │  │ │
@@ -266,7 +266,7 @@ docker compose logs backend
 │  │                            │              │ │
 │  │                    ┌───────┴──────────┐  │ │
 │  │                    │     Frontend     │  │ │
-│  │                    │   (port 3001)    │  │ │
+│  │                    │   (port 45679)    │  │ │
 │  │                    │  - React Dev     │  │ │
 │  │                    │  - Dashboard     │  │ │
 │  │                    └──────────────────┘  │ │
@@ -310,14 +310,14 @@ docker compose logs backend
                    │
 ┌──────────────────▼──────────────────────────────────┐
 │ 5. Backend API Ready                                │
-│    - Listening on http://localhost:3000             │
+│    - Listening on http://localhost:45678             │
 │    - Health endpoint available: /api/health         │
 └──────────────────┬──────────────────────────────────┘
                    │
 ┌──────────────────▼──────────────────────────────────┐
 │ 6. Frontend Container Starts                        │
 │    - depends_on: backend                            │
-│    - React dev server on http://localhost:3001      │
+│    - React dev server on http://localhost:45679      │
 │    - Connects to REACT_APP_API_URL                  │
 └──────────────────┬──────────────────────────────────┘
                    │
@@ -381,9 +381,9 @@ docker compose exec -T postgres psql -U postgres -d rams_workload < backup.sql
 docker compose exec backend npm run test:capacity
 
 # Test API endpoints
-curl http://localhost:3000/api/health
-curl http://localhost:3000/api/resources
-curl "http://localhost:3000/api/resources/capacity?year=2024&month=1"
+curl http://localhost:45678/api/health
+curl http://localhost:45678/api/resources
+curl "http://localhost:45678/api/resources/capacity?year=2024&month=1"
 ```
 
 ## Comparison: Before vs After
@@ -453,8 +453,8 @@ npm start  # Keep terminal open
 ## Next Steps
 
 1. **Run the system**: `./start.sh`
-2. **Explore the UI**: http://localhost:3001
-3. **Check the API**: http://localhost:3000/api/health
+2. **Explore the UI**: http://localhost:45679
+3. **Check the API**: http://localhost:45678/api/health
 4. **Read the docs**: See [README.md](README.md) for full documentation
 5. **Make it yours**: Customize the mock data in `backend/scripts/seed_database.js`
 

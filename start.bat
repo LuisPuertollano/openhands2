@@ -43,10 +43,10 @@ if exist .env (
     echo.
 )
 
-REM Set default ports
+REM Set default ports (using high port numbers to avoid conflicts)
 if not defined POSTGRES_PORT set POSTGRES_PORT=5432
-if not defined BACKEND_PORT set BACKEND_PORT=3000
-if not defined FRONTEND_PORT set FRONTEND_PORT=3001
+if not defined BACKEND_PORT set BACKEND_PORT=45678
+if not defined FRONTEND_PORT set FRONTEND_PORT=45679
 
 REM Check for port conflicts
 echo Checking for port conflicts...

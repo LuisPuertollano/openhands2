@@ -47,7 +47,7 @@ First time setup takes **2-3 minutes**. You'll see:
 
 Once complete, open your browser to:
 
-**🌐 http://localhost:3001**
+**🌐 http://localhost:45679**
 
 That's it! The system is now running with a persistent database.
 
@@ -136,7 +136,7 @@ docker compose up -d --build
 ### Run and Auto-Open Browser
 
 ```powershell
-docker compose up -d --build; Start-Process "http://localhost:3001"
+docker compose up -d --build; Start-Process "http://localhost:45679"
 ```
 
 ### Run and Follow Logs
@@ -174,14 +174,14 @@ rams-frontend       openhands2-frontend      Up
 ### 2. Test Backend API
 
 ```powershell
-curl http://localhost:3000/api/health
+curl http://localhost:45678/api/health
 ```
 
-Or open in browser: http://localhost:3000/api/health
+Or open in browser: http://localhost:45678/api/health
 
 ### 3. Test Frontend
 
-Open browser: http://localhost:3001
+Open browser: http://localhost:45679
 
 You should see the RAMS Workload Management dashboard.
 
@@ -360,7 +360,7 @@ docker compose logs -f
 # Wait for "Backend API is ready!" message, then Ctrl+C
 
 # 3. Open browser
-Start-Process "http://localhost:3001"
+Start-Process "http://localhost:45679"
 
 # 4. Work with the application...
 
@@ -441,12 +441,12 @@ docker system prune -a
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| **Frontend** | http://localhost:3001 | Main application UI |
-| **Backend API** | http://localhost:3000 | REST API endpoints |
-| **Health Check** | http://localhost:3000/api/health | API status |
-| **Resources** | http://localhost:3000/api/resources | All resources |
-| **Capacity** | http://localhost:3000/api/resources/capacity?year=2024&month=1 | Capacity data |
-| **Projects** | http://localhost:3000/api/projects | All projects |
+| **Frontend** | http://localhost:45679 | Main application UI |
+| **Backend API** | http://localhost:45678 | REST API endpoints |
+| **Health Check** | http://localhost:45678/api/health | API status |
+| **Resources** | http://localhost:45678/api/resources | All resources |
+| **Capacity** | http://localhost:45678/api/resources/capacity?year=2024&month=1 | Capacity data |
+| **Projects** | http://localhost:45678/api/projects | All projects |
 | **PostgreSQL** | localhost:5432 | Database (use pgAdmin/DBeaver) |
 
 ## Support & Documentation
@@ -464,7 +464,7 @@ docker system prune -a
 git clone https://github.com/LuisPuertollano/openhands2.git; cd openhands2; docker compose up -d --build
 ```
 
-**Then open:** http://localhost:3001
+**Then open:** http://localhost:45679
 
 **Your database is persistent and survives restarts!** 🎉
 

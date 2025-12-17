@@ -7,7 +7,7 @@ The RAMS Workload Management System follows a three-tier architecture with clear
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                      PRESENTATION LAYER                      │
-│                     React Frontend (Port 3001)               │
+│                     React Frontend (Port 45679)               │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
 │  │   Capacity   │  │ Benchmarking │  │  Hierarchy   │      │
@@ -23,7 +23,7 @@ The RAMS Workload Management System follows a three-tier architecture with clear
                               │
 ┌─────────────────────────────────────────────────────────────┐
 │                     APPLICATION LAYER                        │
-│                  Node.js + Express (Port 3000)               │
+│                  Node.js + Express (Port 45678)               │
 ├─────────────────────────────────────────────────────────────┤
 │  ┌─────────────────────────────────────────────────────┐    │
 │  │                      Routes                         │    │

@@ -372,7 +372,7 @@ The script automatically:
 - ✅ Initializes PostgreSQL database
 - ✅ Creates schema and seeds mock data
 - ✅ Starts all services
-- ✅ Opens browser to http://localhost:3001
+- ✅ Opens browser to http://localhost:45679
 
 ### Manual Docker Setup
 
@@ -412,9 +412,9 @@ npm start
 
 ### Access
 
-- Frontend: http://localhost:3001
-- Backend API: http://localhost:3000
-- Health Check: http://localhost:3000/api/health
+- Frontend: http://localhost:45679
+- Backend API: http://localhost:45678
+- Health Check: http://localhost:45678/api/health
 
 ---
 

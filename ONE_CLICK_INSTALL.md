@@ -29,7 +29,7 @@ You'll see:
 ### Step 4: Open Browser
 
 ```
-http://localhost:3001
+http://localhost:45679
 ```
 
 **Done!** 🎉
@@ -47,7 +47,7 @@ git clone https://github.com/LuisPuertollano/openhands2.git && cd openhands2 && 
 ### Open Browser
 
 ```
-http://localhost:3001
+http://localhost:45679
 ```
 
 **Done!** 🎉
@@ -118,7 +118,7 @@ rams-frontend   Up
 
 Open in browser:
 ```
-http://localhost:3000/api/health
+http://localhost:45678/api/health
 ```
 
 Should return:
@@ -130,7 +130,7 @@ Should return:
 
 Open in browser:
 ```
-http://localhost:3001
+http://localhost:45679
 ```
 
 Should show: **RAMS Workload Management System** dashboard
@@ -274,11 +274,11 @@ openhands2/
 
 | Service | URL | Description |
 |---------|-----|-------------|
-| **Frontend** | http://localhost:3001 | Main UI |
-| **Backend API** | http://localhost:3000/api | REST API |
-| **Health Check** | http://localhost:3000/api/health | Status |
-| **Resources** | http://localhost:3000/api/resources | All resources |
-| **Projects** | http://localhost:3000/api/projects | All projects |
+| **Frontend** | http://localhost:45679 | Main UI |
+| **Backend API** | http://localhost:45678/api | REST API |
+| **Health Check** | http://localhost:45678/api/health | Status |
+| **Resources** | http://localhost:45678/api/resources | All resources |
+| **Projects** | http://localhost:45678/api/projects | All projects |
 | **Database** | localhost:5432 | PostgreSQL |
 
 ---

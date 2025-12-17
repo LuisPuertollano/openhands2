@@ -2,13 +2,30 @@
 
 ## Overview
 
-The RAMS Workload Management System now includes **automatic port conflict detection** and **configurable ports** to handle situations where default ports (3000, 3001, 5432) are already in use.
+The RAMS Workload Management System uses **high port numbers (45678, 45679)** by default to avoid conflicts with common development servers. It also includes **automatic port conflict detection** and **configurable ports**.
+
+## 🎯 Default Ports
+
+| Service | Default Port | Why? |
+|---------|--------------|------|
+| **Backend API** | 45678 | High port to avoid conflicts with Node.js (3000), Rails (3000), etc. |
+| **Frontend** | 45679 | High port to avoid conflicts with React (3000-3001), Vue (8080), etc. |
+| **PostgreSQL** | 5432 | Standard PostgreSQL port |
+
+**Benefits of high port numbers:**
+- ✅ Avoids conflicts with common development tools (Node.js, React, Angular, Vue, etc.)
+- ✅ Reduces installation failures
+- ✅ Allows running multiple projects simultaneously
+- ✅ Professional port allocation (45000+ range is rarely used)
 
 ## 🎯 Problem Solved
 
-**Before:** Installation would fail if port 3000 or 3001 was already in use (common with other development servers).
+**Before:** Installation would fail if port 3000 or 3001 was already in use (extremely common with other development servers).
 
-**Now:** The installer automatically detects port conflicts and allows you to choose different ports interactively!
+**Now:** 
+- Uses high ports (45678/45679) by default to avoid conflicts
+- Automatically detects any remaining port conflicts
+- Allows you to choose different ports interactively!
 
 ---
 
@@ -18,7 +35,7 @@ The RAMS Workload Management System now includes **automatic port conflict detec
 
 When you run `./start.sh` (Linux/Mac) or `start.bat` (Windows), the system will:
 
-1. ✅ Check if ports 3000, 3001, and 5432 are available
+1. ✅ Check if ports 45678, 45679, and 5432 are available
 2. ⚠️ Alert you if any ports are in use
 3. 💡 Offer you options to resolve the conflict
 
@@ -27,7 +44,7 @@ When you run `./start.sh` (Linux/Mac) or `start.bat` (Windows), the system will:
 If a port conflict is detected, you'll see:
 
 ```
-⚠️  Port 3000 (Backend API) is already in use by PID 12345
+⚠️  Port 45678 (Backend API) is already in use by PID 12345
 
 ==================================================
 ⚠️  PORT CONFLICT DETECTED
@@ -47,11 +64,11 @@ Enter your choice (1/2/3):
 The installer will prompt you for new ports:
 
 ```
-Please enter new port numbers (press Enter to keep default):
+Please enter new port numbers (press Enter to keep current):
 
-PostgreSQL port [current: 5432, default: 5432]: 5433
-Backend API port [current: 3000, default: 3000]: 8080
-Frontend port [current: 3001, default: 3001]: 8081
+PostgreSQL port [current: 5432]: 5433
+Backend API port [current: 45678]: 8080
+Frontend port [current: 45679]: 8081
 
 ✅ Configuration saved to .env file
    PostgreSQL: localhost:5433
@@ -211,18 +228,18 @@ Stop-Process -Id 12345 -Force
 | Service | Default Port | Purpose |
 |---------|--------------|---------|
 | **PostgreSQL** | 5432 | Database server |
-| **Backend** | 3000 | Express API server |
-| **Frontend** | 3001 | React development server |
+| **Backend** | 45678 | Express API server (high port to avoid conflicts) |
+| **Frontend** | 45679 | React development server (high port to avoid conflicts) |
 
-### Recommended Alternative Ports
+### Alternative Ports (if needed)
 
-If defaults are in use, try these:
+If you prefer standard development ports or if high ports are blocked:
 
 | Service | Alternative Ports |
 |---------|-------------------|
 | **PostgreSQL** | 5433, 5434, 15432 |
-| **Backend** | 8000, 8080, 4000, 5000 |
-| **Frontend** | 8001, 8081, 4001, 5001 |
+| **Backend** | 3000, 8000, 8080, 4000, 5000 |
+| **Frontend** | 3001, 8001, 8081, 4001, 5001 |
 
 ### Port Requirements
 

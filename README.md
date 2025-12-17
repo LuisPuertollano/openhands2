@@ -16,10 +16,10 @@ git clone https://github.com/LuisPuertollano/openhands2.git; cd openhands2; dock
 git clone https://github.com/LuisPuertollano/openhands2.git && cd openhands2 && docker compose up -d --build
 ```
 
-**Then open:** http://localhost:3001
+**Then open:** http://localhost:45679
 
 ✅ **Database is persistent** - your data survives container restarts!  
-✅ **Automatic port conflict detection** - installer will prompt for alternative ports if 3000/3001 are in use!  
+✅ **Automatic port conflict detection** - installer will prompt for alternative ports using high ports (45678/45679) to avoid common conflicts!  
 📖 **Windows Guide:** [WINDOWS_DOCKER_DESKTOP.md](WINDOWS_DOCKER_DESKTOP.md)  
 📘 **Full Install Guide:** [INSTALL.md](INSTALL.md)  
 🔌 **Port Configuration:** [PORT_CONFIGURATION.md](PORT_CONFIGURATION.md)
@@ -140,7 +140,7 @@ That's it! The script will:
 - ✅ Initialize database automatically
 - ✅ Seed with mock data (15 resources, 3 projects)
 - ✅ Start all services
-- ✅ Open http://localhost:3001 in your browser
+- ✅ Open http://localhost:45679 in your browser
 
 ### Alternative: Manual Docker Commands
 
@@ -181,7 +181,7 @@ If you prefer to work without Docker:
    npm start
    ```
 
-3. **Access:** http://localhost:3001
+3. **Access:** http://localhost:45679
 
 ## 📊 Core Business Logic
 
@@ -415,13 +415,13 @@ npm run db:seed
 
 ```bash
 # Health check
-curl http://localhost:3000/api/health
+curl http://localhost:45678/api/health
 
 # Get all resources
-curl http://localhost:3000/api/resources
+curl http://localhost:45678/api/resources
 
 # Get capacity data
-curl "http://localhost:3000/api/resources/capacity?year=2024&month=1"
+curl "http://localhost:45678/api/resources/capacity?year=2024&month=1"
 
 # Run capacity validation test
 docker compose exec backend npm run test:capacity  # Docker
@@ -434,7 +434,7 @@ cd backend && npm run test:capacity  # Traditional
 ### Backend (.env)
 
 ```env
-PORT=3000
+PORT=3000  # Internal container port (mapped to 45678 externally)
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=rams_workload
@@ -445,9 +445,11 @@ DB_PASSWORD=postgres
 ### Frontend (.env)
 
 ```env
-REACT_APP_API_URL=http://localhost:3000/api
-PORT=3001
+REACT_APP_API_URL=http://localhost:45678/api
+PORT=3001  # Internal container port (mapped to 45679 externally)
 ```
+
+**Note:** The internal container ports (3000, 3001) are mapped to external ports (45678, 45679) to avoid conflicts.
 
 ## 🤝 Contributing
 

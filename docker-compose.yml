@@ -31,7 +31,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
     ports:
-      - "${BACKEND_PORT:-3000}:3000"
+      - "${BACKEND_PORT:-45678}:3000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -43,11 +43,11 @@ services:
     build: ./frontend
     container_name: rams-frontend
     environment:
-      REACT_APP_API_URL: http://localhost:${BACKEND_PORT:-3000}/api
+      REACT_APP_API_URL: http://localhost:${BACKEND_PORT:-45678}/api
       PORT: 3001
       WATCHPACK_POLLING: "true"
     ports:
-      - "${FRONTEND_PORT:-3001}:3001"
+      - "${FRONTEND_PORT:-45679}:3001"
     depends_on:
       - backend
     networks:

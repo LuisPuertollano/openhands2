@@ -35,7 +35,7 @@ start.bat
 
 Double-click `start.bat` or run it from Command Prompt.
 
-**That's it!** The application will be available at http://localhost:3001
+**That's it!** The application will be available at http://localhost:45679
 
 ## Option 2: Manual Docker Setup
 
@@ -63,10 +63,10 @@ docker compose down -v
 - Backend waits for PostgreSQL to be ready
 - Backend automatically creates database schema
 - Backend seeds mock data (15 resources, 3 projects, 15 WPs)
-- Backend API starts on port 3000
-- Frontend starts on port 3001
+- Backend API starts on port 45678
+- Frontend starts on port 45679
 
-Access the app at: http://localhost:3001
+Access the app at: http://localhost:45679
 
 ## Option 3: Traditional Setup (For Developers)
 
@@ -118,7 +118,7 @@ cd frontend
 npm start
 ```
 
-Access at: http://localhost:3001
+Access at: http://localhost:45679
 
 ## Testing the System
 
@@ -145,21 +145,21 @@ This will:
 
 ```bash
 # Health check
-curl http://localhost:3000/api/health
+curl http://localhost:45678/api/health
 
 # Get all resources
-curl http://localhost:3000/api/resources
+curl http://localhost:45678/api/resources
 
 # Get capacity data for January 2024
-curl "http://localhost:3000/api/resources/capacity?year=2024&month=1"
+curl "http://localhost:45678/api/resources/capacity?year=2024&month=1"
 
 # Get budget status
-curl http://localhost:3000/api/work-packages/budget-status
+curl http://localhost:45678/api/work-packages/budget-status
 ```
 
 ### 3. Explore the Frontend
 
-Visit http://localhost:3001 and explore:
+Visit http://localhost:45679 and explore:
 
 1. **Capacity Overview** (`/capacity`)
    - View resource utilization heatmap
@@ -220,7 +220,7 @@ docker compose up
 
 #### Port Already in Use
 
-**Problem**: Port 3000, 3001, or 5432 already in use
+**Problem**: Port 45678, 3001, or 5432 already in use
 
 **Solution**:
 ```bash
