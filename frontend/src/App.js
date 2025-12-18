@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-ro
 import CapacityOverview from './components/dashboard/CapacityOverview';
 import BenchmarkingView from './components/benchmarking/BenchmarkingView';
 import HierarchyNavigator from './components/hierarchy/HierarchyNavigator';
+import GanttChartView from './components/gantt/GanttChartView';
+import WorkloadView from './components/workload/WorkloadView';
 import './styles/App.css';
 
 function App() {
@@ -40,6 +42,20 @@ function App() {
           >
             🌳 Project Hierarchy
           </Link>
+          <Link 
+            to="/gantt" 
+            className={activeTab === 'gantt' ? 'active' : ''}
+            onClick={() => setActiveTab('gantt')}
+          >
+            📅 Gantt Chart
+          </Link>
+          <Link 
+            to="/workload" 
+            className={activeTab === 'workload' ? 'active' : ''}
+            onClick={() => setActiveTab('workload')}
+          >
+            💼 Workload Report
+          </Link>
         </nav>
 
         <main className="app-content">
@@ -48,6 +64,8 @@ function App() {
             <Route path="/capacity" element={<CapacityOverview />} />
             <Route path="/benchmarking" element={<BenchmarkingView />} />
             <Route path="/hierarchy" element={<HierarchyNavigator />} />
+            <Route path="/gantt" element={<GanttChartView />} />
+            <Route path="/workload" element={<WorkloadView />} />
           </Routes>
         </main>
 

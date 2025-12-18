@@ -4,6 +4,9 @@ import { formatHours, formatDate } from '../../utils/helpers';
 import AddProjectModal from '../common/AddProjectModal';
 import AddWorkPackageModal from '../common/AddWorkPackageModal';
 import AddActivityModal from '../common/AddActivityModal';
+import EditProjectModal from '../common/EditProjectModal';
+import EditWorkPackageModal from '../common/EditWorkPackageModal';
+import EditActivityModal from '../common/EditActivityModal';
 
 const HierarchyNavigator = () => {
   const [projects, setProjects] = useState([]);
@@ -16,8 +19,14 @@ const HierarchyNavigator = () => {
   const [showAddProjectModal, setShowAddProjectModal] = useState(false);
   const [showAddWorkPackageModal, setShowAddWorkPackageModal] = useState(false);
   const [showAddActivityModal, setShowAddActivityModal] = useState(false);
+  const [showEditProjectModal, setShowEditProjectModal] = useState(false);
+  const [showEditWorkPackageModal, setShowEditWorkPackageModal] = useState(false);
+  const [showEditActivityModal, setShowEditActivityModal] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [selectedWorkPackageId, setSelectedWorkPackageId] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedWorkPackage, setSelectedWorkPackage] = useState(null);
+  const [selectedActivity, setSelectedActivity] = useState(null);
 
   useEffect(() => {
     loadProjects();
@@ -111,6 +120,44 @@ const HierarchyNavigator = () => {
     setSelectedWorkPackageId(null);
   };
 
+  const handleEditProject = (project) => {
+    setSelectedProject(project);
+    setShowEditProjectModal(true);
+  };
+
+  const handleEditWorkPackage = (wp) => {
+    setSelectedWorkPackage(wp);
+    setShowEditWorkPackageModal(true);
+  };
+
+  const handleEditActivity = (activity) => {
+    setSelectedActivity(activity);
+    setShowEditActivityModal(true);
+  };
+
+  const handleProjectUpdated = () => {
+    loadProjects();
+    setSelectedProject(null);
+  };
+
+  const handleWorkPackageUpdated = () => {
+    if (selectedWorkPackage && selectedWorkPackage.project_id) {
+      workPackagesAPI.getByProject(selectedWorkPackage.project_id).then(response => {
+        setWorkPackages(prev => ({ ...prev, [selectedWorkPackage.project_id]: response.data.data }));
+      });
+    }
+    setSelectedWorkPackage(null);
+  };
+
+  const handleActivityUpdated = () => {
+    if (selectedActivity && selectedActivity.work_package_id) {
+      activitiesAPI.getByWorkPackage(selectedActivity.work_package_id).then(response => {
+        setActivities(prev => ({ ...prev, [selectedActivity.work_package_id]: response.data.data }));
+      });
+    }
+    setSelectedActivity(null);
+  };
+
   if (loading) return <div className="loading">Loading hierarchy...</div>;
   if (error) return <div className="error">{error}</div>;
 
@@ -151,16 +198,28 @@ const HierarchyNavigator = () => {
                   {formatDate(project.start_date)} - {formatDate(project.end_date)}
                 </span>
               </div>
-              <button 
-                className="btn-add-small" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddWorkPackage(project.id);
-                }}
-                title="Add Work Package"
-              >
-                ➕ WP
-              </button>
+              <div className="node-actions">
+                <button 
+                  className="btn-edit-small" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEditProject(project);
+                  }}
+                  title="Edit Project"
+                >
+                  ✏️
+                </button>
+                <button 
+                  className="btn-add-small" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddWorkPackage(project.id);
+                  }}
+                  title="Add Work Package"
+                >
+                  ➕ WP
+                </button>
+              </div>
             </div>
 
             {expandedProjects.has(project.id) && workPackages[project.id] && (
@@ -179,16 +238,28 @@ const HierarchyNavigator = () => {
                           Standard: {formatHours(wp.standard_effort_hours)}h
                         </span>
                       </div>
-                      <button 
-                        className="btn-add-small" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAddActivity(wp.id);
-                        }}
-                        title="Add Activity"
-                      >
-                        ➕ Activity
-                      </button>
+                      <div className="node-actions">
+                        <button 
+                          className="btn-edit-small" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditWorkPackage(wp);
+                          }}
+                          title="Edit Work Package"
+                        >
+                          ✏️
+                        </button>
+                        <button 
+                          className="btn-add-small" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddActivity(wp.id);
+                          }}
+                          title="Add Activity"
+                        >
+                          ➕ Activity
+                        </button>
+                      </div>
                     </div>
 
                     {expandedWorkPackages.has(wp.id) && activities[wp.id] && (
@@ -199,14 +270,26 @@ const HierarchyNavigator = () => {
                           activities[wp.id].map(activity => (
                             <div key={activity.id} className="activity-node">
                               <div className="node-header activity">
-                                <span className="node-icon">📝</span>
-                                <span className="resource-name">{activity.resource_name}</span>
-                                <span className="planned-hours">
-                                  {formatHours(activity.planned_hours)}h
-                                </span>
-                                <span className="activity-dates">
-                                  {formatDate(activity.start_date)} - {formatDate(activity.end_date)}
-                                </span>
+                                <div className="node-info">
+                                  <span className="node-icon">📝</span>
+                                  <span className="resource-name">{activity.resource_name}</span>
+                                  <span className="planned-hours">
+                                    {formatHours(activity.planned_hours)}h
+                                  </span>
+                                  <span className="activity-dates">
+                                    {formatDate(activity.start_date)} - {formatDate(activity.end_date)}
+                                  </span>
+                                </div>
+                                <button 
+                                  className="btn-edit-small" 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleEditActivity(activity);
+                                  }}
+                                  title="Edit Activity"
+                                >
+                                  ✏️
+                                </button>
                               </div>
                             </div>
                           ))
@@ -260,6 +343,36 @@ const HierarchyNavigator = () => {
         }}
         onActivityAdded={handleActivityAdded}
         preselectedWorkPackageId={selectedWorkPackageId}
+      />
+
+      <EditProjectModal
+        isOpen={showEditProjectModal}
+        onClose={() => {
+          setShowEditProjectModal(false);
+          setSelectedProject(null);
+        }}
+        onProjectUpdated={handleProjectUpdated}
+        project={selectedProject}
+      />
+
+      <EditWorkPackageModal
+        isOpen={showEditWorkPackageModal}
+        onClose={() => {
+          setShowEditWorkPackageModal(false);
+          setSelectedWorkPackage(null);
+        }}
+        onWorkPackageUpdated={handleWorkPackageUpdated}
+        workPackage={selectedWorkPackage}
+      />
+
+      <EditActivityModal
+        isOpen={showEditActivityModal}
+        onClose={() => {
+          setShowEditActivityModal(false);
+          setSelectedActivity(null);
+        }}
+        onActivityUpdated={handleActivityUpdated}
+        activity={selectedActivity}
       />
     </div>
   );

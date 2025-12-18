@@ -2,7 +2,13 @@
 
 A comprehensive full-stack workload management tool designed for RAMS (Reliability, Availability, Maintainability, and Safety) Engineering teams in the railway industry.
 
-## 🚀 One-Click Installation
+## 🚀 One-Click Installation (Zero Configuration!)
+
+**No manual setup required!** The application automatically:
+- Waits for database to be ready
+- Creates all database tables and triggers
+- Seeds with realistic mock data
+- Starts all services in the correct order
 
 ### Windows Docker Desktop - Copy & Paste This:
 
@@ -18,8 +24,9 @@ git clone https://github.com/LuisPuertollano/openhands2.git && cd openhands2 && 
 
 **Then open:** http://localhost:45679
 
+✅ **Fully Automated Setup** - no manual intervention needed!  
 ✅ **Database is persistent** - your data survives container restarts!  
-✅ **Automatic port conflict detection** - installer will prompt for alternative ports using high ports (45678/45679) to avoid common conflicts!  
+✅ **Intelligent Startup** - automatic service orchestration and dependency management!  
 📖 **Windows Guide:** [WINDOWS_DOCKER_DESKTOP.md](WINDOWS_DOCKER_DESKTOP.md)  
 📘 **Full Install Guide:** [INSTALL.md](INSTALL.md)  
 🔌 **Port Configuration:** [PORT_CONFIGURATION.md](PORT_CONFIGURATION.md)
@@ -35,8 +42,11 @@ This system helps engineering teams manage and track resource allocation across 
 - **📊 Capacity Management**: Real-time tracking of resource utilization with automatic capacity calculations
 - **📈 Budget Benchmarking**: Compare planned vs. standard effort hours for work packages
 - **🌳 Project Hierarchy**: Intuitive tree-view navigation from Projects → Work Packages → Activities
+- **✏️ Full CRUD Operations**: Add, edit, and manage Resources, Projects, Work Packages, and Activities
+- **📅 Gantt Chart**: Visual timeline of projects, work packages, and activities with multiple view modes
+- **💼 Workload Report**: Detailed breakdown of workload per resource per month per project with CSV export
 - **📋 Audit Trail**: Automatic logging of all changes to work packages and resource assignments
-- **📄 Export Reports**: Generate PDF and Excel reports for capacity and budget analysis
+- **📄 Export Reports**: Generate PDF, Excel, and CSV reports for capacity, budget, and workload analysis
 - **⚠️ Intelligent Warnings**: Automatic alerts for over-capacity resources and budget overruns
 
 ## 🏗️ Architecture
@@ -137,10 +147,13 @@ start.bat
 
 That's it! The script will:
 - ✅ Build all containers (PostgreSQL, Backend, Frontend)
-- ✅ Initialize database automatically
-- ✅ Seed with mock data (15 resources, 3 projects)
+- ✅ Wait for PostgreSQL to be ready (automatic startup synchronization)
+- ✅ Initialize database automatically (no manual intervention required)
+- ✅ Seed with mock data (15 resources, 3 projects, 45+ activities)
 - ✅ Start all services
 - ✅ Open http://localhost:45679 in your browser
+
+**Zero Configuration Required!** The setup is fully automated with intelligent startup orchestration.
 
 ### Alternative: Manual Docker Commands
 
@@ -305,6 +318,7 @@ Month: 2024-01
 - **Monthly Selection**: Navigate through different months
 - **Export Functions**: Download Excel/PDF reports
 - **Capacity Warnings**: Automatic alerts for over-capacity resources
+- **Edit Resources**: Direct edit functionality with inline buttons
 
 ### 2. Budget Benchmarking View
 
@@ -321,6 +335,25 @@ Month: 2024-01
 - **Visual Icons**: Clear distinction between hierarchy levels
 - **Detail Display**: Shows dates, effort hours, and RAMS tags
 - **Expand/Collapse All**: Quick navigation controls
+- **Full Edit Capability**: Edit projects, work packages, and activities directly from the tree view
+
+### 4. Gantt Chart Visualization
+
+- **Timeline View**: Visual representation of project schedules
+- **Multiple Views**: Switch between Projects, Work Packages, and Activities views
+- **Interactive Bars**: Hover to see detailed date ranges
+- **Color-coded Items**: Easy visual distinction between different entity types
+- **Automatic Scaling**: Timeline adjusts to fit all data
+- **Summary Statistics**: Quick overview of projects and timeline range
+
+### 5. Workload Report
+
+- **Matrix View**: Resource × Month × Project breakdown
+- **Filterable**: Filter by year, resource, or project
+- **Monthly Totals**: Aggregated hours per month
+- **Resource Summaries**: Total workload per resource
+- **Project Summaries**: Total workload per project
+- **CSV Export**: Download detailed workload data for external analysis
 
 ## 🔒 RAMS Compliance Features
 

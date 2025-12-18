@@ -1,0 +1,203 @@
+.workload-view {
+  padding: 20px;
+}
+
+.workload-view .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.workload-view .header h2 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.workload-view .controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.workload-view .controls select {
+  padding: 8px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.workload-view .controls .btn-export {
+  padding: 8px 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: transform 0.2s;
+}
+
+.workload-view .controls .btn-export:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.workload-table-container {
+  overflow-x: auto;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.workload-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  min-width: 1200px;
+}
+
+.workload-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.workload-table thead th {
+  padding: 12px 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.workload-table tbody tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: background-color 0.2s;
+}
+
+.workload-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.workload-table tbody td {
+  padding: 10px 8px;
+  text-align: center;
+  font-size: 13px;
+  border: 1px solid #e9ecef;
+}
+
+.workload-table .resource-cell,
+.workload-table .project-cell {
+  text-align: left;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.workload-table .resource-cell {
+  background-color: #f8f9fa;
+}
+
+.workload-table .hours-cell {
+  color: #495057;
+}
+
+.workload-table .total-cell {
+  background-color: #e9ecef;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.workload-table .no-data {
+  padding: 40px;
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.workload-table tfoot {
+  background-color: #343a40;
+  color: white;
+}
+
+.workload-table tfoot td {
+  padding: 12px 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.workload-table .grand-total-cell {
+  background-color: #212529;
+  font-size: 15px;
+}
+
+.workload-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.workload-summary .summary-section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.workload-summary .summary-section h3 {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+  font-size: 16px;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 10px;
+}
+
+.workload-summary .summary-grid {
+  display: grid;
+  gap: 15px;
+}
+
+.workload-summary .summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border-left: 3px solid #667eea;
+}
+
+.workload-summary .summary-label {
+  font-size: 14px;
+  color: #495057;
+  font-weight: 500;
+}
+
+.workload-summary .summary-value {
+  font-size: 16px;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.workload-summary .grand-total-display {
+  text-align: center;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  color: white;
+}
+
+.workload-summary .grand-total-value {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.workload-summary .grand-total-subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+}

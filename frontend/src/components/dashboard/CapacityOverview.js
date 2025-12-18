@@ -3,6 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { resourcesAPI, reportsAPI } from '../../services/api';
 import { getCapacityColor, getCurrentYearMonth, downloadFile } from '../../utils/helpers';
 import AddResourceModal from '../common/AddResourceModal';
+import EditResourceModal from '../common/EditResourceModal';
 
 const CapacityOverview = () => {
   const [capacityData, setCapacityData] = useState([]);
@@ -13,6 +14,8 @@ const CapacityOverview = () => {
   const [selectedYear, setSelectedYear] = useState(year);
   const [selectedMonth, setSelectedMonth] = useState(month);
   const [showAddResourceModal, setShowAddResourceModal] = useState(false);
+  const [showEditResourceModal, setShowEditResourceModal] = useState(false);
+  const [selectedResource, setSelectedResource] = useState(null);
 
   useEffect(() => {
     loadCapacityData();
@@ -51,6 +54,11 @@ const CapacityOverview = () => {
       console.error('Export failed:', err);
       alert('Failed to export report');
     }
+  };
+
+  const handleEditResource = (resource) => {
+    setSelectedResource(resource);
+    setShowEditResourceModal(true);
   };
 
   if (loading) return <div className="loading">Loading capacity data...</div>;
@@ -126,6 +134,7 @@ const CapacityOverview = () => {
               <th>Available (h)</th>
               <th>Utilization</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -153,6 +162,15 @@ const CapacityOverview = () => {
                     {resource.capacity_status.replace(/_/g, ' ')}
                   </span>
                 </td>
+                <td>
+                  <button 
+                    className="btn-edit-small" 
+                    onClick={() => handleEditResource(resource)}
+                    title="Edit Resource"
+                  >
+                    ✏️
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -163,6 +181,16 @@ const CapacityOverview = () => {
         isOpen={showAddResourceModal}
         onClose={() => setShowAddResourceModal(false)}
         onResourceAdded={loadCapacityData}
+      />
+
+      <EditResourceModal
+        isOpen={showEditResourceModal}
+        onClose={() => {
+          setShowEditResourceModal(false);
+          setSelectedResource(null);
+        }}
+        onResourceUpdated={loadCapacityData}
+        resource={selectedResource}
       />
     </div>
   );
