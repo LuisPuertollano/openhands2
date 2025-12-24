@@ -9,11 +9,13 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY . .
+# Copy the entrypoint script first and make it executable
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
 
-# Make entrypoint script executable
-RUN chmod +x docker-entrypoint.sh
+# Copy the rest of the application
+COPY . .
 
 EXPOSE 3000
 
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
