@@ -40,71 +40,115 @@ const WorkloadView = () => {
   const loadWorkloadData = async () => {
     try {
       setLoading(true);
-      
-      // Get all activities
-      const activitiesRes = await activitiesAPI.getAll();
-      const activities = activitiesRes.data.data;
 
-      // Process activities into workload data
+      const [activitiesRes, resourcesRes] = await Promise.all([
+        activitiesAPI.getAll(),
+        resourcesAPI.getAll()
+      ]);
+      const activities = activitiesRes.data.data;
+      const allResources = resourcesRes.data.data;
+
       const workloadMap = {};
 
       activities.forEach(activity => {
-        // Filter by selected resource and project
-        if (selectedResource !== 'all' && activity.resource_id !== parseInt(selectedResource)) {
-          return;
-        }
-        if (selectedProject !== 'all' && activity.project_id !== parseInt(selectedProject)) {
-          return;
-        }
+        if (selectedResource !== 'all' && activity.resource_id !== parseInt(selectedResource)) return;
+        if (selectedProject !== 'all' && activity.project_id !== parseInt(selectedProject)) return;
 
+        const resource = allResources.find(r => r.id === activity.resource_id);
         const startDate = new Date(activity.start_date);
         const endDate = new Date(activity.end_date);
-        
-        // Calculate months between start and end
-        const months = [];
-        const current = new Date(startDate);
+
+        // Calculate relevant months
+        const monthsInActivity = [];
+        let current = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
         while (current <= endDate) {
           if (current.getFullYear() === selectedYear) {
-            months.push(current.getMonth() + 1); // 1-based month
+            monthsInActivity.push({
+              month: current.getMonth() + 1,
+              year: current.getFullYear()
+            });
           }
           current.setMonth(current.getMonth() + 1);
         }
 
-        // Distribute hours evenly across months
-        const hoursPerMonth = activity.planned_hours / months.length;
+        if (monthsInActivity.length === 0) return;
 
-        months.forEach(month => {
-          const key = `${activity.resource_id}-${activity.project_id}-${month}`;
-          
+        // Calculate total weighted working days for this activity's duration
+        // We need to know how many working days of THIS activity fall into EACH month
+        let totalWeightedDays = 0;
+        const monthWeights = monthsInActivity.map(m => {
+          const monthStart = new Date(m.year, m.month - 1, 1);
+          const monthEnd = new Date(m.year, m.month, 0);
+
+          const effectiveStart = startDate > monthStart ? startDate : monthStart;
+          const effectiveEnd = endDate < monthEnd ? endDate : monthEnd;
+
+          // Count working days between effectiveStart and effectiveEnd
+          let workingDaysInSpan = 0;
+          let temp = new Date(effectiveStart);
+          while (temp <= effectiveEnd) {
+            const day = temp.getDay();
+            if (day !== 0 && day !== 6) workingDaysInSpan++;
+            temp.setDate(temp.getDate() + 1);
+          }
+
+          // Adjust by resource availability override if it exists
+          const monthKey = `${m.year}-${String(m.month).padStart(2, '0')}`;
+          const override = resource?.monthly_availability_overrides?.[monthKey];
+
+          let weight = workingDaysInSpan;
+          if (override && override.available_days !== undefined) {
+            // If there's an override, we scale the working days proportionally
+            // Default working days in month (excluding weekends)
+            let defaultWorkingDays = 0;
+            let dTemp = new Date(monthStart);
+            while (dTemp <= monthEnd) {
+              const dDay = dTemp.getDay();
+              if (dDay !== 0 && dDay !== 6) defaultWorkingDays++;
+              dTemp.setDate(dTemp.getDate() + 1);
+            }
+
+            if (defaultWorkingDays > 0) {
+              weight = (workingDaysInSpan / defaultWorkingDays) * override.available_days;
+            }
+          }
+
+          totalWeightedDays += weight;
+          return { ...m, weight };
+        });
+
+        // Distribute hours based on weights
+        monthWeights.forEach(mw => {
+          if (mw.weight === 0) return;
+
+          const hoursForMonth = (mw.weight / totalWeightedDays) * activity.planned_hours;
+          const key = `${activity.resource_id}-${activity.project_id}-${mw.month}`;
+
           if (!workloadMap[key]) {
             workloadMap[key] = {
               resource_id: activity.resource_id,
               resource_name: activity.resource_name,
               project_id: activity.project_id,
               project_name: activity.project_name,
-              month: month,
+              month: mw.month,
               total_hours: 0,
               activities: []
             };
           }
 
-          workloadMap[key].total_hours += hoursPerMonth;
+          workloadMap[key].total_hours += hoursForMonth;
           workloadMap[key].activities.push({
             id: activity.id,
             work_package_name: activity.work_package_name,
-            hours: hoursPerMonth
+            hours: hoursForMonth
           });
         });
       });
 
       const workloadArray = Object.values(workloadMap);
       workloadArray.sort((a, b) => {
-        if (a.resource_name !== b.resource_name) {
-          return a.resource_name.localeCompare(b.resource_name);
-        }
-        if (a.project_name !== b.project_name) {
-          return a.project_name.localeCompare(b.project_name);
-        }
+        if (a.resource_name !== b.resource_name) return a.resource_name.localeCompare(b.resource_name);
+        if (a.project_name !== b.project_name) return a.project_name.localeCompare(b.project_name);
         return a.month - b.month;
       });
 
@@ -161,11 +205,11 @@ const WorkloadView = () => {
     for (let i = 1; i <= 12; i++) {
       totals[i] = 0;
     }
-    
+
     workloadData.forEach(item => {
       totals[item.month] += item.total_hours;
     });
-    
+
     return totals;
   };
 
@@ -194,7 +238,7 @@ const WorkloadView = () => {
   if (loading && workloadData.length === 0) {
     return <div className="loading">Loading workload data...</div>;
   }
-  
+
   if (error) return <div className="error">{error}</div>;
 
   const monthlyTotals = getMonthlyTotals();
@@ -256,23 +300,23 @@ const WorkloadView = () => {
                   const prevItem = idx > 0 ? workloadData[idx - 1] : null;
                   const showResource = !prevItem || prevItem.resource_name !== item.resource_name;
                   const showProject = !prevItem || prevItem.resource_name !== item.resource_name || prevItem.project_name !== item.project_name;
-                  
+
                   // Get all months for this resource-project combination
                   const resourceProjectData = workloadData.filter(
                     d => d.resource_name === item.resource_name && d.project_name === item.project_name
                   );
-                  
+
                   const monthsData = {};
                   resourceProjectData.forEach(d => {
                     monthsData[d.month] = d.total_hours;
                   });
-                  
+
                   const rowTotal = Object.values(monthsData).reduce((sum, val) => sum + val, 0);
-                  
+
                   // Only show one row per resource-project combination
-                  if (idx === 0 || 
-                      workloadData[idx - 1].resource_name !== item.resource_name || 
-                      workloadData[idx - 1].project_name !== item.project_name) {
+                  if (idx === 0 ||
+                    workloadData[idx - 1].resource_name !== item.resource_name ||
+                    workloadData[idx - 1].project_name !== item.project_name) {
                     return (
                       <tr key={`${item.resource_id}-${item.project_id}`}>
                         <td className="resource-cell">{item.resource_name}</td>

@@ -4,6 +4,7 @@ import { resourcesAPI, reportsAPI } from '../../services/api';
 import { getCapacityColor, getCurrentYearMonth, downloadFile } from '../../utils/helpers';
 import AddResourceModal from '../common/AddResourceModal';
 import EditResourceModal from '../common/EditResourceModal';
+import AvailabilityModal from '../common/AvailabilityModal';
 
 const CapacityOverview = () => {
   const [capacityData, setCapacityData] = useState([]);
@@ -15,6 +16,7 @@ const CapacityOverview = () => {
   const [selectedMonth, setSelectedMonth] = useState(month);
   const [showAddResourceModal, setShowAddResourceModal] = useState(false);
   const [showEditResourceModal, setShowEditResourceModal] = useState(false);
+  const [showAvailabilityModal, setShowAvailabilityModal] = useState(false);
   const [selectedResource, setSelectedResource] = useState(null);
 
   useEffect(() => {
@@ -59,6 +61,11 @@ const CapacityOverview = () => {
   const handleEditResource = (resource) => {
     setSelectedResource(resource);
     setShowEditResourceModal(true);
+  };
+
+  const handleManageAvailability = (resource) => {
+    setSelectedResource(resource);
+    setShowAvailabilityModal(true);
   };
 
   if (loading) return <div className="loading">Loading capacity data...</div>;
@@ -147,8 +154,8 @@ const CapacityOverview = () => {
                 <td>{resource.available_hours.toFixed(1)}</td>
                 <td>
                   <div className="utilization-bar">
-                    <div 
-                      className="utilization-fill" 
+                    <div
+                      className="utilization-fill"
                       style={{
                         width: `${Math.min(resource.utilization_percentage, 100)}%`,
                         backgroundColor: getCapacityColor(resource.utilization_percentage)
@@ -163,12 +170,19 @@ const CapacityOverview = () => {
                   </span>
                 </td>
                 <td>
-                  <button 
-                    className="btn-edit-small" 
+                  <button
+                    className="btn-edit-small"
                     onClick={() => handleEditResource(resource)}
                     title="Edit Resource"
                   >
                     ✏️
+                  </button>
+                  <button
+                    className="btn-availability-small"
+                    onClick={() => handleManageAvailability(resource)}
+                    title="Manage Availability"
+                  >
+                    📅
                   </button>
                 </td>
               </tr>
@@ -191,6 +205,16 @@ const CapacityOverview = () => {
         }}
         onResourceUpdated={loadCapacityData}
         resource={selectedResource}
+      />
+
+      <AvailabilityModal
+        isOpen={showAvailabilityModal}
+        onClose={() => {
+          setShowAvailabilityModal(false);
+          setSelectedResource(null);
+        }}
+        resource={selectedResource}
+        onAvailabilityUpdated={loadCapacityData}
       />
     </div>
   );

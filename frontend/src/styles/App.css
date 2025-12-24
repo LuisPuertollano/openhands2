@@ -540,3 +540,90 @@ tr.over-capacity {
 .activity-node .node-header:hover {
   background-color: rgba(102, 126, 234, 0.05);
 }
+
+/* Availability Styles */
+.btn-edit-small,
+.btn-availability-small {
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  margin-right: 5px;
+}
+
+.btn-edit-small:hover,
+.btn-availability-small:hover {
+  background-color: #f0f0f0;
+}
+
+.availability-form {
+  padding: 1rem 0;
+}
+
+.year-selector {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.year-selector label {
+  font-weight: 600;
+}
+
+.months-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.month-override-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.month-override-item label {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.month-override-item input {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-secondary {
+  background-color: #6c757d !important;
+}
+
+.form-info {
+  background-color: #e7f3ff;
+  border-left: 4px solid #007bff;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+}
+
+.form-info p {
+  font-size: 0.9rem;
+  color: #0056b3;
+}
+
+@media (max-width: 600px) {
+  .months-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
