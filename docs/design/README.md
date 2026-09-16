@@ -21,6 +21,7 @@ el esquema ni el código del sistema RAMS actual del repositorio (ver
 | 07 | [Interfaz y vistas](07-interfaz-y-vistas.md) | Las 8 pantallas y qué pregunta contesta cada una |
 | 08 | [Plan de implementación](08-plan-de-implementacion.md) | Fases, criterios de aceptación, esfuerzo |
 | 09 | [Decisiones (ADR)](09-decisiones-adr.md) | Las 14 decisiones estructurales, con sus alternativas descartadas |
+| — | [Prompt inicial](PROMPT-INICIAL.md) | Prompt autocontenido para arrancar el proyecto desde un repositorio vacío |
 
 ## Resumen en una página
 
